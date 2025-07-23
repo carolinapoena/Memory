@@ -108,7 +108,7 @@ function createBoard() {
     const card = document.createElement('div');
     card.classList.add('card');
     card.dataset.index = idx;
-    card.innerHTML = '';
+    card.innerHTML = cardInfo.pairId; // Set to '' to hide the hint.
     card.addEventListener('click', onCardClick);
     board.appendChild(card);
     cards.push(card);
