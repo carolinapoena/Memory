@@ -44,6 +44,21 @@ let timerInterval = null;
 let level = 1;
 let maxPairs = Math.floor(basePairs.length / 2);
 
+let score = 0;
+const scoreDisplay = document.createElement('div');
+scoreDisplay.id = 'score';
+scoreDisplay.textContent = 'Score: 0';
+scoreDisplay.style.marginTop = '12px';
+document.querySelector('.container')?.appendChild(scoreDisplay);
+
+const leaderboard = document.createElement('div');
+leaderboard.id = 'leaderboard';
+leaderboard.innerHTML = '<h3>Leaderboard</h3><ol id="leaderboard-list"></ol>';
+leaderboard.style.marginTop = '16px';
+document.querySelector('.container')?.appendChild(leaderboard);
+
+let leaderboardData = JSON.parse(localStorage.getItem('leaderboard')) || [];
+
 // Create and insert Next Level button
 let nextBtn = document.createElement('button');
 nextBtn.id = 'next-level';
@@ -123,12 +138,14 @@ function onCardClick(e) {
       card2.classList.add('matched');
       matchedCount += 2;
       flippedCards = [];
+      updateScore(10); // Award points for a match
       // All cards matched for this level
       if (matchedCount === cardList.length) {
         clearInterval(timerInterval);
         updateTimer();
         setTimeout(() => {
           alert(`Congratulations! You finished level ${level} in ${getElapsedSeconds()} seconds.`);
+          updateLeaderboard();
           // Only show next button if more levels are possible
           if (Math.pow(2, level) <= maxPairs * 2) {
             nextBtn.style.display = 'inline-block';
@@ -136,6 +153,7 @@ function onCardClick(e) {
         }, 300);
       }
     } else {
+      updateScore(-5); // Deduct points for a mismatch
       setTimeout(() => {
         card1.classList.remove('flipped');
         card2.classList.remove('flipped');
@@ -151,7 +169,6 @@ function updateTimer() {
   timerDisplay.textContent = `Time: ${getElapsedSeconds()}s`;
 }
 
-
 function getElapsedSeconds() {
   if (!startTime) return 0;
   return Math.floor((Date.now() - startTime) / 1000);
@@ -161,9 +178,62 @@ function resetGame() {
   clearInterval(timerInterval);
   startTime = null;
   timerDisplay.textContent = 'Time: 0s';
+  score = 0;
+  updateScore(0); // Reset score display
   createBoard();
 }
 
+function updateScore(points) {
+  score += points;
+  scoreDisplay.textContent = `Score: ${score}`;
+}
+
+// Create a form for player's name input
+const nameForm = document.createElement('form');
+nameForm.id = 'name-form';
+nameForm.innerHTML = `
+  <label for="player-name">Enter your name to start the game:</label>
+  <input type="text" id="player-name" placeholder="Your name" required>
+  <button type="submit">Start</button>
+`;
+nameForm.style.marginBottom = '16px';
+document.querySelector('.container')?.prepend(nameForm);
+
+let playerName = "Player"; // Default name if none is provided
+
+nameForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const nameInput = document.getElementById('player-name');
+  if (nameInput.value.trim()) {
+    playerName = nameInput.value.trim();
+  }
+  nameForm.style.display = 'none'; // Hide the form after submission
+  gameTitle.style.display = 'none'; // Hide the game title after submission
+  board.style.display = 'grid';
+  timerDisplay.style.display = 'block';
+  restartLevelBtn.style.display = 'inline-block';
+  restartGameBtn.style.display = 'inline-block';
+  scoreDisplay.style.display = 'block';
+  leaderboard.style.display = 'block';
+  createBoard();
+  updateLeaderboard();
+});
+
+// Update leaderboard to include player's name
+function updateLeaderboard() {
+  leaderboardData.push({ name: playerName, level, score, time: getElapsedSeconds() });
+  leaderboardData.sort((a, b) => b.score - a.score || a.time - b.time);
+  leaderboardData = leaderboardData.slice(0, 5); // Keep top 5 scores
+  localStorage.setItem('leaderboard', JSON.stringify(leaderboardData));
+
+  const leaderboardList = document.getElementById('leaderboard-list');
+  leaderboardList.innerHTML = '';
+  leaderboardData.forEach((entry) => {
+    const li = document.createElement('li');
+    li.textContent = `${entry.name} - Level ${entry.level} - Score: ${entry.score} - Time: ${entry.time}s`;
+    leaderboardList.appendChild(li);
+  });
+}
 
 // Rename the existing restart button to 'Restart Level'
 restartLevelBtn.textContent = 'Restart Level';
@@ -172,5 +242,22 @@ restartLevelBtn.addEventListener('click', () => {
   nextBtn.style.display = 'none';
 });
 
-// Initialize
-createBoard();
+// Initialize (remove createBoard and updateLeaderboard calls here)
+updateLeaderboard();
+
+// Create a title for the game
+const gameTitle = document.createElement('h1');
+gameTitle.textContent = 'Memory Game';
+gameTitle.style.textAlign = 'center';
+gameTitle.style.marginBottom = '16px';
+document.querySelector('.container')?.prepend(gameTitle);
+
+// Hide all game elements initially
+board.style.display = 'none';
+timerDisplay.style.display = 'none';
+restartLevelBtn.style.display = 'none';
+restartGameBtn.style.display = 'none';
+scoreDisplay.style.display = 'none';
+leaderboard.style.display = 'none';
+nextBtn.style.display = 'none';
+
