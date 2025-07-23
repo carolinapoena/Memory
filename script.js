@@ -213,7 +213,7 @@ nameForm.innerHTML = `
   <button type="submit">Start</button>
 `;
 nameForm.style.marginBottom = '16px';
-document.querySelector('.container')?.prepend(nameForm);
+document.querySelector('.title')?.insertAdjacentElement( 'afterend', nameForm );
 
 let playerName = "Player"; // Default name if none is provided
 
@@ -224,7 +224,6 @@ nameForm.addEventListener('submit', (e) => {
     playerName = nameInput.value.trim();
   }
   nameForm.style.display = 'none'; // Hide the form after submission
-  gameTitle.style.display = 'none'; // Hide the game title after submission
   board.style.display = 'grid';
   timerDisplay.style.display = 'block';
   levelLabel.style.display = 'block';
@@ -254,14 +253,6 @@ function updateLeaderboard() {
 
 // Initialize (remove createBoard and updateLeaderboard calls here)
 updateLeaderboard();
-
-// Create a title for the game
-const gameTitle = document.createElement('h1');
-gameTitle.textContent = 'Memory Game';
-gameTitle.style.textAlign = 'center';
-gameTitle.style.marginBottom = '16px';
-document.querySelector('.container')?.prepend(gameTitle);
-
 // Hide all game elements initially
 board.style.display = 'none';
 timerDisplay.style.display = 'none';
