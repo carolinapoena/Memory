@@ -31,22 +31,22 @@ document.querySelector('.container')?.appendChild(restartGameBtn);
 
 // Each card has a unique cardId, and a pairId for matching (pairId never in DOM)
 const basePairs = [
-  { pairId: 1, seo: 'Focus keyword optimization' },
-  { pairId: 1, seo: 'Meta description best practices' },
-  { pairId: 2, seo: 'Internal linking strategy' },
-  { pairId: 2, seo: 'Anchor text relevance' },
-  { pairId: 3, seo: 'Readability analysis Yoast' },
-  { pairId: 3, seo: 'Passive voice reduction' },
-  { pairId: 4, seo: 'SEO title length' },
-  { pairId: 4, seo: 'Slug optimization tips' },
-  { pairId: 5, seo: 'Alt text for images' },
-  { pairId: 5, seo: 'Image SEO Yoast' },
-  { pairId: 6, seo: 'Outbound links quality' },
-  { pairId: 6, seo: 'External link attributes' },
-  { pairId: 7, seo: 'Keyphrase density' },
-  { pairId: 7, seo: 'Keyword stuffing warning' },
-  { pairId: 8, seo: 'Content length recommendation' },
-  { pairId: 8, seo: 'Minimum word count SEO' }
+  { pairId: 1, seo: 'Yoast AI' },
+  { pairId: 1, seo: "<img src=\'./yoast_ai.png\'>" },
+  { pairId: 2, seo: 'Readability' },
+  { pairId: 2, seo: '<img src="./readability.png">' },
+  { pairId: 3, seo: 'Internal linking' },
+  { pairId: 3, seo: '<img src="./internal_linking.png">' },
+  { pairId: 4, seo: '24/7 support' },
+  { pairId: 4, seo: '<img src="./support.png">' },
+  { pairId: 5, seo: 'Google docs add-on' },
+  { pairId: 5, seo: '<img src="./google_docs.png">' },
+  { pairId: 6, seo: 'Yoast SEO for Shopify' },
+  { pairId: 6, seo: '<img src="./shopify.png">' },
+  { pairId: 7, seo: 'Social previews' },
+  { pairId: 7, seo: '<img src="./facebook.png">' },
+  { pairId: 8, seo: 'Yoast Academy' },
+  { pairId: 8, seo: '<img src="./academy.png">' }
 ];
 
 let cardsData = [];
@@ -120,7 +120,6 @@ function onCardClick(e) {
   const card = e.currentTarget;
   if (card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.length === 2) return;
 
-  console.log(startTime)
   if (!startTime) {
     startTime = Date.now();
     timerInterval = setInterval(updateTimer, 100);
@@ -130,6 +129,7 @@ function onCardClick(e) {
   // Get the phrase from the shuffled cardList using the index
   const idx = parseInt(card.dataset.index, 10);
   card.innerHTML = cardList[idx].seo;
+  console.log( cardList[idx].seo );
   flippedCards.push(card);
 
   if (flippedCards.length === 2) {
