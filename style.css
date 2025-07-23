@@ -55,7 +55,7 @@ h1 {
   color: #fff;
   cursor: default;
 }
-#restart {
+#restart, #restart-game, #next-level {
   padding: 8px 20px;
   font-size: 1em;
   border: none;
