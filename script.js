@@ -10,8 +10,8 @@ nextBtn.style.display = 'none';
 nextBtn.style.marginTop = '16px';
 nextBtn.addEventListener('click', () => {
   level++;
-  resetGame();
   updateLevelLabel();
+  createBoard();
   nextBtn.style.display = 'none';
 });
 document.querySelector('.next-container')?.appendChild(nextBtn);
@@ -108,7 +108,8 @@ function createBoard() {
     const card = document.createElement('div');
     card.classList.add('card');
     card.dataset.index = idx;
-    card.innerHTML = '';
+    // Remove this for the real game.
+    card.innerHTML = cardInfo.pairId;
     card.addEventListener('click', onCardClick);
     board.appendChild(card);
     cards.push(card);
