@@ -85,7 +85,7 @@ function shuffle(array) {
 let cardList = [];
 function createBoard() {
   // Determine number of pairs for this level
-  let numPairs = Math.min(2 + (level - 1) * 2, maxPairs); // Start with 2 pairs (4 cards) and add 2 pairs (4 cards) per level
+  let numPairs = Math.min(2 + (level - 1) * 2, maxPairs); // Start with 2 pairs (4 cards) and add 2 pairs (4 cards) per level, max 4 pairs
   let pairsForLevel = [];
   let usedPairIds = new Set();
   for (let i = 0; i < basePairs.length && pairsForLevel.length < numPairs * 2; i++) {
@@ -129,7 +129,6 @@ function onCardClick(e) {
   // Get the phrase from the shuffled cardList using the index
   const idx = parseInt(card.dataset.index, 10);
   card.innerHTML = cardList[idx].seo;
-  console.log( cardList[idx].seo );
   flippedCards.push(card);
 
   if (flippedCards.length === 2) {
@@ -148,8 +147,21 @@ function onCardClick(e) {
         setTimeout(() => {
           document.querySelector('.message').innerHTML = `Congratulations! You finished level ${level} in ${getElapsedSeconds()} seconds.`;
           updateLeaderboard();
+          // Show final score form if level 4 is reached
+          if (level === 4) {
+            document.getElementById('final-score').value = score;
+            finalScoreForm.style.display = 'block';
+            leaderboard.style.display = 'block';
+            // Hide all other game elements
+            board.style.display = 'none';
+            timerDisplay.style.display = 'none';
+            levelLabel.style.display = 'none';
+            restartGameBtn.style.display = 'none';
+            scoreDisplay.style.display = 'none';
+            nextBtn.style.display = 'none';
+          }
           // Only show next button if more levels are possible
-          if (Math.pow(2, level) <= maxPairs * 2) {
+          if (Math.pow(2, level) <= maxPairs * 2 && level < 4) {
             nextBtn.removeAttribute('disabled'); // Enable next button
           }
         }, 300);
@@ -251,6 +263,29 @@ function updateLeaderboard() {
   });
 }
 
+// Add after leaderboard creation
+const finalScoreForm = document.createElement('form');
+finalScoreForm.id = 'final-score-form';
+finalScoreForm.style.display = 'none';
+finalScoreForm.innerHTML = `
+  <h3>Submit Your Final Score</h3>
+  <label for="final-name">Name:</label>
+  <input type="text" id="final-name" name="final-name" required><br><br>
+  <label for="final-email">Email:</label>
+  <input type="email" id="final-email" name="final-email" required><br><br>
+  <label for="final-score">Score:</label>
+  <input type="text" id="final-score" name="final-score" readonly><br><br>
+  <button type="submit">Submit Score</button>
+`;
+finalScoreForm.style.marginTop = '24px';
+document.querySelector('.container')?.appendChild(finalScoreForm);
+
+finalScoreForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  finalScoreForm.style.display = 'none';
+  document.querySelector('.message').innerHTML = 'Thank you for submitting your score!';
+  // You can add code here to send the data to a backend if needed
+});
 
 // Initialize (remove createBoard and updateLeaderboard calls here)
 updateLeaderboard();
