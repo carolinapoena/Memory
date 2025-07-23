@@ -10,9 +10,11 @@ nextBtn.style.display = 'none';
 nextBtn.style.marginTop = '16px';
 nextBtn.addEventListener('click', () => {
   level++;
-  resetGame();
   updateLevelLabel();
+  createBoard();
   nextBtn.style.display = 'none';
+  document.querySelector('.message').innerHTML = '';
+
 });
 document.querySelector('.next-container')?.appendChild(nextBtn);
 
@@ -145,7 +147,7 @@ function onCardClick(e) {
       if (matchedCount === cardList.length) {
         updateTimer();
         setTimeout(() => {
-          alert(`Congratulations! You finished level ${level} in ${getElapsedSeconds()} seconds.`);
+          document.querySelector('.message').innerHTML = `Congratulations! You finished level ${level} in ${getElapsedSeconds()} seconds.`;
           updateLeaderboard();
           // Only show next button if more levels are possible
           if (Math.pow(2, level) <= maxPairs * 2) {
