@@ -2,8 +2,24 @@ const board = document.getElementById('game-board');
 const timerDisplay = document.getElementById('timer');
 const restartBtn = document.getElementById('restart');
 
-const symbols = [
-  '🍎','🍌','🍇','🍉','🍒','🍋','🍓','🍍'
+// Each pair has the same id but different SEO/Yoast phrases
+const cardsData = [
+  { id: 1, seo: 'Focus keyword optimization' },
+  { id: 1, seo: 'Meta description best practices' },
+  { id: 2, seo: 'Internal linking strategy' },
+  { id: 2, seo: 'Anchor text relevance' },
+  { id: 3, seo: 'Readability analysis Yoast' },
+  { id: 3, seo: 'Passive voice reduction' },
+  { id: 4, seo: 'SEO title length' },
+  { id: 4, seo: 'Slug optimization tips' },
+  { id: 5, seo: 'Alt text for images' },
+  { id: 5, seo: 'Image SEO Yoast' },
+  { id: 6, seo: 'Outbound links quality' },
+  { id: 6, seo: 'External link attributes' },
+  { id: 7, seo: 'Keyphrase density' },
+  { id: 7, seo: 'Keyword stuffing warning' },
+  { id: 8, seo: 'Content length recommendation' },
+  { id: 8, seo: 'Minimum word count SEO' }
 ];
 let cards = [];
 let flippedCards = [];
@@ -20,16 +36,17 @@ function shuffle(array) {
 }
 
 function createBoard() {
-  // 8 pairs, 16 cards
-  const cardSymbols = shuffle([...symbols, ...symbols]);
+  // 8 pairs, 16 cards, each pair has different phrase but same id
+  const cardList = shuffle([...cardsData]);
   board.innerHTML = '';
   cards = [];
   matchedCount = 0;
   flippedCards = [];
-  cardSymbols.forEach((symbol, idx) => {
+  cardList.forEach((cardInfo, idx) => {
     const card = document.createElement('div');
     card.classList.add('card');
-    card.dataset.symbol = symbol;
+    card.dataset.id = cardInfo.id;
+    card.dataset.seo = cardInfo.seo;
     card.dataset.index = idx;
     card.innerHTML = '';
     card.addEventListener('click', onCardClick);
@@ -48,12 +65,12 @@ function onCardClick(e) {
   }
 
   card.classList.add('flipped');
-  card.innerHTML = card.dataset.symbol;
+  card.innerHTML = card.dataset.seo;
   flippedCards.push(card);
 
   if (flippedCards.length === 2) {
     const [card1, card2] = flippedCards;
-    if (card1.dataset.symbol === card2.dataset.symbol) {
+    if (card1.dataset.id === card2.dataset.id) {
       card1.classList.add('matched');
       card2.classList.add('matched');
       matchedCount += 2;
