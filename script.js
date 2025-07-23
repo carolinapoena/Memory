@@ -1,7 +1,20 @@
 const board = document.getElementById('game-board');
 
 const timerDisplay = document.getElementById('timer');
-const restartLevelBtn = document.getElementById('restart');
+
+// Create and insert Next Level button
+let nextBtn = document.createElement('button');
+nextBtn.id = 'next-level';
+nextBtn.textContent = 'Next Level';
+nextBtn.style.display = 'none';
+nextBtn.style.marginTop = '16px';
+nextBtn.addEventListener('click', () => {
+  level++;
+  resetGame();
+  updateLevelLabel();
+  nextBtn.style.display = 'none';
+});
+document.querySelector('.next-container')?.appendChild(nextBtn);
 
 // Create and insert Restart Game button
 let restartGameBtn = document.createElement('button');
@@ -11,6 +24,7 @@ restartGameBtn.style.marginLeft = '12px';
 restartGameBtn.addEventListener('click', () => {
   level = 1;
   resetGame();
+  updateLevelLabel();
   nextBtn.style.display = 'none';
 });
 document.querySelector('.container')?.appendChild(restartGameBtn);
@@ -59,19 +73,6 @@ document.querySelector('.container')?.appendChild(leaderboard);
 
 let leaderboardData = JSON.parse(localStorage.getItem('leaderboard')) || [];
 
-// Create and insert Next Level button
-let nextBtn = document.createElement('button');
-nextBtn.id = 'next-level';
-nextBtn.textContent = 'Next Level';
-nextBtn.style.display = 'none';
-nextBtn.style.marginTop = '16px';
-nextBtn.addEventListener('click', () => {
-  level++;
-  resetGame();
-  nextBtn.style.display = 'none';
-});
-document.querySelector('.container')?.appendChild(nextBtn);
-
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -118,6 +119,7 @@ function onCardClick(e) {
   const card = e.currentTarget;
   if (card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.length === 2) return;
 
+  console.log(startTime)
   if (!startTime) {
     startTime = Date.now();
     timerInterval = setInterval(updateTimer, 100);
@@ -141,7 +143,6 @@ function onCardClick(e) {
       updateScore(10); // Award points for a match
       // All cards matched for this level
       if (matchedCount === cardList.length) {
-        clearInterval(timerInterval);
         updateTimer();
         setTimeout(() => {
           alert(`Congratulations! You finished level ${level} in ${getElapsedSeconds()} seconds.`);
@@ -188,6 +189,21 @@ function updateScore(points) {
   scoreDisplay.textContent = `Score: ${score}`;
 }
 
+// Create and insert Level Label
+const levelLabel = document.createElement('div');
+levelLabel.id = 'level-label';
+levelLabel.textContent = `Level: ${level}`;
+levelLabel.style.fontSize = '1.2em';
+levelLabel.style.marginBottom = '8px';
+levelLabel.style.fontWeight = 'bold';
+document.querySelector('.container')?.insertBefore(levelLabel, timerDisplay);
+
+// Update the level label when the level changes
+function updateLevelLabel() {
+  levelLabel.textContent = `Level: ${level}`;
+}
+
+
 // Create a form for player's name input
 const nameForm = document.createElement('form');
 nameForm.id = 'name-form';
@@ -211,7 +227,7 @@ nameForm.addEventListener('submit', (e) => {
   gameTitle.style.display = 'none'; // Hide the game title after submission
   board.style.display = 'grid';
   timerDisplay.style.display = 'block';
-  restartLevelBtn.style.display = 'inline-block';
+  levelLabel.style.display = 'block';
   restartGameBtn.style.display = 'inline-block';
   scoreDisplay.style.display = 'block';
   leaderboard.style.display = 'block';
@@ -235,12 +251,6 @@ function updateLeaderboard() {
   });
 }
 
-// Rename the existing restart button to 'Restart Level'
-restartLevelBtn.textContent = 'Restart Level';
-restartLevelBtn.addEventListener('click', () => {
-  resetGame();
-  nextBtn.style.display = 'none';
-});
 
 // Initialize (remove createBoard and updateLeaderboard calls here)
 updateLeaderboard();
@@ -255,9 +265,8 @@ document.querySelector('.container')?.prepend(gameTitle);
 // Hide all game elements initially
 board.style.display = 'none';
 timerDisplay.style.display = 'none';
-restartLevelBtn.style.display = 'none';
 restartGameBtn.style.display = 'none';
 scoreDisplay.style.display = 'none';
 leaderboard.style.display = 'none';
 nextBtn.style.display = 'none';
-
+levelLabel.style.display = 'none';
