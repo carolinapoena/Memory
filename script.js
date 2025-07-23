@@ -6,13 +6,14 @@ const timerDisplay = document.getElementById('timer');
 let nextBtn = document.createElement('button');
 nextBtn.id = 'next-level';
 nextBtn.textContent = 'Next Level';
-nextBtn.style.display = 'none';
+nextBtn.setAttribute('disabled','disabled');
 nextBtn.style.marginTop = '16px';
 nextBtn.addEventListener('click', () => {
   level++;
   updateLevelLabel();
   createBoard();
-  nextBtn.style.display = 'none';
+  nextBtn.setAttribute('disabled','disabled');
+  document.querySelector('.message').innerHTML = '';
 });
 document.querySelector('.next-container')?.appendChild(nextBtn);
 
@@ -25,7 +26,7 @@ restartGameBtn.addEventListener('click', () => {
   level = 1;
   resetGame();
   updateLevelLabel();
-  nextBtn.style.display = 'none';
+  nextBtn.setAttribute('disabled','disabled');
 });
 document.querySelector('.container')?.appendChild(restartGameBtn);
 
@@ -63,7 +64,7 @@ const scoreDisplay = document.createElement('div');
 scoreDisplay.id = 'score';
 scoreDisplay.textContent = 'Score: 0';
 scoreDisplay.style.marginTop = '12px';
-document.querySelector('.container')?.appendChild(scoreDisplay);
+document.querySelector('.next-container')?.appendChild(scoreDisplay);
 
 const leaderboard = document.createElement('div');
 leaderboard.id = 'leaderboard';
@@ -108,8 +109,7 @@ function createBoard() {
     const card = document.createElement('div');
     card.classList.add('card');
     card.dataset.index = idx;
-    // Remove this for the real game.
-    card.innerHTML = cardInfo.pairId;
+    card.innerHTML = cardInfo.pairId; // Set to '' to hide the hint.
     card.addEventListener('click', onCardClick);
     board.appendChild(card);
     cards.push(card);
@@ -146,11 +146,11 @@ function onCardClick(e) {
       if (matchedCount === cardList.length) {
         updateTimer();
         setTimeout(() => {
-          alert(`Congratulations! You finished level ${level} in ${getElapsedSeconds()} seconds.`);
+          document.querySelector('.message').innerHTML = `Congratulations! You finished level ${level} in ${getElapsedSeconds()} seconds.`;
           updateLeaderboard();
           // Only show next button if more levels are possible
           if (Math.pow(2, level) <= maxPairs * 2) {
-            nextBtn.style.display = 'inline-block';
+            nextBtn.removeAttribute('disabled'); // Enable next button
           }
         }, 300);
       }
@@ -214,7 +214,7 @@ nameForm.innerHTML = `
   <button type="submit">Start</button>
 `;
 nameForm.style.marginBottom = '16px';
-document.querySelector('.container')?.prepend(nameForm);
+document.querySelector('.title')?.insertAdjacentElement( 'afterend', nameForm );
 
 let playerName = "Player"; // Default name if none is provided
 
@@ -225,7 +225,6 @@ nameForm.addEventListener('submit', (e) => {
     playerName = nameInput.value.trim();
   }
   nameForm.style.display = 'none'; // Hide the form after submission
-  gameTitle.style.display = 'none'; // Hide the game title after submission
   board.style.display = 'grid';
   timerDisplay.style.display = 'block';
   levelLabel.style.display = 'block';
@@ -255,19 +254,11 @@ function updateLeaderboard() {
 
 // Initialize (remove createBoard and updateLeaderboard calls here)
 updateLeaderboard();
-
-// Create a title for the game
-const gameTitle = document.createElement('h1');
-gameTitle.textContent = 'Memory Game';
-gameTitle.style.textAlign = 'center';
-gameTitle.style.marginBottom = '16px';
-document.querySelector('.container')?.prepend(gameTitle);
-
 // Hide all game elements initially
 board.style.display = 'none';
 timerDisplay.style.display = 'none';
 restartGameBtn.style.display = 'none';
 scoreDisplay.style.display = 'none';
 leaderboard.style.display = 'none';
-nextBtn.style.display = 'none';
 levelLabel.style.display = 'none';
+nextBtn.setAttribute('disabled','disabled'); // Hide next button initially
