@@ -68,8 +68,7 @@ function shuffle(array) {
 let cardList = [];
 function createBoard() {
   // Determine number of pairs for this level
-  let numPairs = Math.min(Math.pow(2, level - 1), maxPairs);
-  // Use only as many pairs as needed for this level
+  let numPairs = Math.min(2 + (level - 1) * 2, maxPairs); // Start with 2 pairs (4 cards) and add 2 pairs (4 cards) per level
   let pairsForLevel = [];
   let usedPairIds = new Set();
   for (let i = 0; i < basePairs.length && pairsForLevel.length < numPairs * 2; i++) {
