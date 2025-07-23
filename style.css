@@ -23,15 +23,18 @@ h1 {
 .game-board {
   display: grid;
   grid-template-columns: repeat(4, 120px);
-  grid-template-rows: repeat(4, 80px);
+  grid-template-rows: repeat(4, 200px);
   gap: 12px;
   justify-content: center;
   margin-bottom: 20px;
 }
 .card {
   width: 120px;
-  height: 80px;
-  background: #2196f3;
+  height: 200px;
+  background-image: url('./yoasie_flying_no_bg.png'), radial-gradient(at 100% 60%, rgba(120, 174, 41, .4) 0, transparent 50%), radial-gradient(at 0 2%, rgba(164, 30, 106, .4) 0, transparent 50%);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
   color: #fff;
   font-size: 16px;
   border-radius: 8px;
@@ -44,6 +47,7 @@ h1 {
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
   position: relative;
 }
+
 .card.flipped, .card.matched {
   background: #fff;
   color: #2196f3;
