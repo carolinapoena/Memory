@@ -6,15 +6,14 @@ const timerDisplay = document.getElementById('timer');
 let nextBtn = document.createElement('button');
 nextBtn.id = 'next-level';
 nextBtn.textContent = 'Next Level';
-nextBtn.style.display = 'none';
+nextBtn.setAttribute('disabled','disabled');
 nextBtn.style.marginTop = '16px';
 nextBtn.addEventListener('click', () => {
   level++;
   updateLevelLabel();
   createBoard();
-  nextBtn.style.display = 'none';
+  nextBtn.setAttribute('disabled','disabled');
   document.querySelector('.message').innerHTML = '';
-
 });
 document.querySelector('.next-container')?.appendChild(nextBtn);
 
@@ -27,7 +26,7 @@ restartGameBtn.addEventListener('click', () => {
   level = 1;
   resetGame();
   updateLevelLabel();
-  nextBtn.style.display = 'none';
+  nextBtn.setAttribute('disabled','disabled');
 });
 document.querySelector('.container')?.appendChild(restartGameBtn);
 
@@ -65,7 +64,7 @@ const scoreDisplay = document.createElement('div');
 scoreDisplay.id = 'score';
 scoreDisplay.textContent = 'Score: 0';
 scoreDisplay.style.marginTop = '12px';
-document.querySelector('.container')?.appendChild(scoreDisplay);
+document.querySelector('.next-container')?.appendChild(scoreDisplay);
 
 const leaderboard = document.createElement('div');
 leaderboard.id = 'leaderboard';
@@ -151,7 +150,7 @@ function onCardClick(e) {
           updateLeaderboard();
           // Only show next button if more levels are possible
           if (Math.pow(2, level) <= maxPairs * 2) {
-            nextBtn.style.display = 'inline-block';
+            nextBtn.removeAttribute('disabled'); // Enable next button
           }
         }, 300);
       }
@@ -261,5 +260,5 @@ timerDisplay.style.display = 'none';
 restartGameBtn.style.display = 'none';
 scoreDisplay.style.display = 'none';
 leaderboard.style.display = 'none';
-nextBtn.style.display = 'none';
 levelLabel.style.display = 'none';
+nextBtn.setAttribute('disabled','disabled'); // Hide next button initially
